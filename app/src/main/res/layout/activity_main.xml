@@ -7,29 +7,39 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
+    <com.whut.getianao.quickdraw.view.CustomVideoView
+        android:id="@+id/main_videoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.whut.getianao.quickdraw.view.CustomVideoView>
 
-    <Button
-        android:id="@+id/btn_startNewGame"
+    <TextView
+        android:id="@+id/tv_startNewGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="创建游戏"
+        android:layout_marginBottom="36dp"
+        android:text="开始游戏"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_joinGame"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    <Button
-        android:id="@+id/btn_joinGame"
+    <TextView
+        android:id="@+id/tv_joinGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="加入游戏"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_startNewGame"/>
+        />
 
 </android.support.constraint.ConstraintLayout>

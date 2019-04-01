@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.whut.getianao.quickdraw.R;
+import com.whut.getianao.quickdraw.base.BaseActivity;
 import com.whut.getianao.quickdraw.fragment.ClientFragment;
 import com.whut.getianao.quickdraw.fragment.GameFragment;
 import com.whut.getianao.quickdraw.fragment.ServerFragment;
@@ -27,7 +28,7 @@ import com.whut.getianao.quickdraw.utils.WifiAdmin;
 
 import java.net.Socket;
 
-public class ClientActivity extends AppCompatActivity {
+public class ClientActivity extends BaseActivity {
     public static final int DEVICE_CONNECTING = 1;//有设备正在连接热点
     public static final int DEVICE_CONNECTED = 2;//有设备连上热点
     public static final int SEND_MSG_SUCCSEE = 3;//发送消息成功

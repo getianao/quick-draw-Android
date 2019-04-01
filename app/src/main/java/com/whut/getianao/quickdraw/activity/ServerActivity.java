@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.whut.getianao.quickdraw.R;
+import com.whut.getianao.quickdraw.base.BaseActivity;
 import com.whut.getianao.quickdraw.fragment.GameFragment;
 import com.whut.getianao.quickdraw.fragment.ServerFragment;
 import com.whut.getianao.quickdraw.thread.ConnectThread;
@@ -34,7 +35,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-public class ServerActivity extends AppCompatActivity {
+public class ServerActivity extends BaseActivity {
     public static final int DEVICE_CONNECTING = 1;//有设备正在连接热点
     public static final int DEVICE_CONNECTED = 2;//有设备连上热点
     public static final int SEND_MSG_SUCCSEE = 3;//发送消息成功
