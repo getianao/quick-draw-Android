@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,10 +11,11 @@
     <com.whut.getianao.quickdraw.view.CustomVideoView
         android:id="@+id/main_videoView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.whut.getianao.quickdraw.view.CustomVideoView>
+        android:layout_height="match_parent"></com.whut.getianao.quickdraw.view.CustomVideoView>
 
-    <TextView
+
+
+    <info.hoang8f.widget.FButton
         android:id="@+id/tv_startNewGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,25 +23,36 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="36dp"
         android:text="开始游戏"
-        android:textColor="@android:color/white"
         android:textSize="35sp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/tv_joinGame"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
 
-    <TextView
+        fbutton:cornerRadius="5dp"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp" />
+
+    <info.hoang8f.widget.FButton
         android:id="@+id/tv_joinGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="36dp"
         android:text="加入游戏"
         android:textColor="@android:color/white"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+
+        fbutton:cornerRadius="5dp"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp" />
+
+
 
 </android.support.constraint.ConstraintLayout>
