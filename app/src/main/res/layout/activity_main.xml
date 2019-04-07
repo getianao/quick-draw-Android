@@ -11,8 +11,9 @@
     <com.whut.getianao.quickdraw.view.CustomVideoView
         android:id="@+id/main_videoView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.whut.getianao.quickdraw.view.CustomVideoView>
-
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="30dp"></com.whut.getianao.quickdraw.view.CustomVideoView>
 
 
     <info.hoang8f.widget.FButton
@@ -21,14 +22,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="20dp"
         android:text="开始游戏"
-        android:textSize="35sp"
         android:textColor="@color/white"
+        android:textSize="35sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_joinGame"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
 
+        app:layout_constraintStart_toStartOf="parent"
         fbutton:cornerRadius="5dp"
         fbutton:shadowColor="@color/redbrown"
         fbutton:shadowEnabled="true"
@@ -40,14 +42,35 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="20dp"
         android:text="加入游戏"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_btnIntro"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        fbutton:cornerRadius="5dp"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp" />
+
+    <info.hoang8f.widget.FButton
+        android:id="@+id/tv_btnIntro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="36dp"
+        android:text="游戏说明"
         android:textColor="@android:color/white"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
 
+        app:layout_constraintStart_toStartOf="parent"
         fbutton:cornerRadius="5dp"
         fbutton:shadowColor="@color/redbrown"
         fbutton:shadowEnabled="true"

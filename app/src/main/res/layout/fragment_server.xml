@@ -1,72 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <Button
+    android:layout_height="match_parent">
+
+    <com.whut.getianao.quickdraw.view.CustomVideoView
+        android:id="@+id/Server_videoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="96dp"></com.whut.getianao.quickdraw.view.CustomVideoView>
+
+    <!--<Button-->
+        <!--android:id="@+id/create_wifi"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="39dp"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:text="开始搜索"-->
+        <!--tools:layout_editor_absoluteX="470dp"-->
+        <!--tools:layout_editor_absoluteY="175dp" />-->
+    <info.hoang8f.widget.FButton
         android:id="@+id/create_wifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
         android:text="开始搜索"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:textColor="@android:color/white"
 
-    <Button
+        android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@+id/start_game"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.681"
+        app:layout_constraintStart_toStartOf="parent"
+        fbutton:cornerRadius="5dp"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp" />
+
+    <info.hoang8f.widget.FButton
         android:id="@+id/close_wifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="48dp"
         android:text="结束匹配"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/send"/>
 
-    <Button
+        app:layout_constraintHorizontal_bias="0.681"
+        app:layout_constraintStart_toStartOf="parent"
+        fbutton:cornerRadius="5dp"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp" />
+    <!--<Button-->
+        <!--android:id="@+id/close_wifi"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="39dp"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--android:text="结束匹配"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--tools:layout_editor_absoluteX="0dp" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/send"-->
+        <!--android:layout_width="88dp"-->
+        <!--android:layout_height="39dp"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:text="发送消息"-->
+        <!--tools:layout_editor_absoluteX="417dp"-->
+        <!--tools:layout_editor_absoluteY="295dp" />-->
+    <info.hoang8f.widget.FButton
         android:id="@+id/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
         android:text="发送消息"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+
+        app:layout_constraintBottom_toTopOf="@+id/close_wifi"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.681"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_game"/>
+        fbutton:cornerRadius="5dp"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp" />
 
     <TextView
         android:id="@+id/receive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:text="这里用来显示来自Client的消息"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/close_wifi"/>
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="382dp" />
 
-    <Button
+    <!--<Button-->
+        <!--android:id="@+id/start_game"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="39dp"-->
+        <!--android:text="开始游戏"-->
+        <!--tools:layout_editor_absoluteX="431dp"-->
+        <!--tools:layout_editor_absoluteY="234dp" />-->
+    <info.hoang8f.widget.FButton
         android:id="@+id/start_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
         android:text="开始游戏"
+
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@+id/send"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.681"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_wifi"/>
+        fbutton:cornerRadius="5dp"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp" />
+
 </android.support.constraint.ConstraintLayout>

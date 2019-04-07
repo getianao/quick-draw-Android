@@ -1,6 +1,8 @@
 package com.whut.getianao.quickdraw.fragment;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,14 +17,17 @@ import android.widget.TextView;
 import com.whut.getianao.quickdraw.R;
 import com.whut.getianao.quickdraw.activity.GameActivity;
 import com.whut.getianao.quickdraw.activity.ServerActivity;
+import com.whut.getianao.quickdraw.view.CustomVideoView;
 
 public class ServerFragment extends Fragment {
     private ServerActivity parentActivity;
     private TextView text_state;
-    private Button btn_closeWifi;
-    private Button btn_createWifi;
-    private Button btn_send;
-    private Button btn_startGame;
+    private info.hoang8f.widget.FButton btn_closeWifi;
+    private info.hoang8f.widget.FButton btn_createWifi;
+    private info.hoang8f.widget.FButton btn_send;
+    private info.hoang8f.widget.FButton btn_startGame;
+    private View view;
+    private CustomVideoView videoView;
 
     public TextView getText_state() {
         return text_state;
@@ -44,13 +49,38 @@ public class ServerFragment extends Fragment {
         return btn_startGame;
     }
 
+    private void playVedio(){
+        videoView = view.findViewById(R.id.Server_videoView);
+        videoView.setVideoURI(Uri.parse("android.resource://"+getContext().getPackageName()+"/"+R.raw.client_background));
+        //播放
+        videoView.start();
+        //循环播放
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoView.start();
+                mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                    @Override
+                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                        return false;
+                    }
+                });
+            }
+        });
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_server, container, false);
+        view = inflater.inflate(R.layout.fragment_server, container, false);
         parentActivity = (ServerActivity) getActivity();
         initView(view);
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopplayVideo();
     }
 
     //view设置
@@ -59,13 +89,23 @@ public class ServerFragment extends Fragment {
         btn_closeWifi = view.findViewById(R.id.close_wifi);
         btn_send = view.findViewById(R.id.send);
         btn_startGame=view.findViewById(R.id.start_game);
+        btn_createWifi.setButtonColor(getResources().getColor(R.color.red));
+        btn_closeWifi.setButtonColor(getResources().getColor(R.color.red));
+        btn_send.setButtonColor(getResources().getColor(R.color.red));
+        btn_startGame.setButtonColor(getResources().getColor(R.color.red));
 
         text_state = view.findViewById(R.id.receive);
         btn_startGame.setEnabled(false);//disable 开始游戏直到匹配到客户端
         btn_closeWifi.setVisibility(View.GONE);
         btn_send.setVisibility(View.GONE);
 
+        playVedio();
         bindBtnOnClickListener();
+    }
+    private  void  stopplayVideo()
+    {
+        //stop video
+        videoView.stopPlayback();
     }
 
     //按钮绑定
