@@ -10,8 +10,8 @@
         android:id="@+id/Client_videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="96dp"></com.whut.getianao.quickdraw.view.CustomVideoView>
+        tools:layout_editor_absoluteX="102dp"
+        tools:layout_editor_absoluteY="10dp"></com.whut.getianao.quickdraw.view.CustomVideoView>
 
     <TextView
         android:id="@+id/text_client_init"
@@ -39,75 +39,78 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_client_init"/>
 
-    <Button
+    <!--<Button-->
+        <!--android:id="@+id/btn_client_connect"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:text="开始搜索"-->
+        <!--android:textAllCaps="false"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/text_client_status"/>-->
+
+    <info.hoang8f.widget.FButton
         android:id="@+id/btn_client_connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="68dp"
         android:text="开始搜索"
-        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_client_status"/>
-
+        fbutton:cornerRadius="5dp"
+        fbutton:layout_constraintHorizontal_bias="0.657"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp"
+        tools:ignore="MissingConstraints" />
     <!--<info.hoang8f.widget.FButton-->
         <!--android:id="@+id/btn_client_connect"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
         <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginBottom="80dp"-->
-        <!--android:text="开始搜索"-->
-        <!--android:textColor="@android:color/white"-->
-        <!--android:textSize="35sp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintHorizontal_bias="0.499"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--fbutton:cornerRadius="5dp"-->
-        <!--fbutton:layout_constraintHorizontal_bias="0.657"-->
-        <!--fbutton:shadowColor="@color/redbrown"-->
-        <!--fbutton:shadowEnabled="true"-->
-        <!--fbutton:shadowHeight="5dp" />-->
+        <!--android:text="test"-->
+        <!--android:textAllCaps="false"-->
+        <!--tools:ignore="MissingConstraints" />-->
 
-    <Button
-        android:id="@+id/btn_client_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-
-        android:layout_marginEnd="8dp"
-        android:text="发送消息"
-        android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_client_connect"/>
-
-    <!--<info.hoang8f.widget.FButton-->
+    <!--<Button-->
         <!--android:id="@+id/btn_client_send"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="10dp"-->
         <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginBottom="32dp"-->
-        <!--android:text="开始搜索"-->
-        <!--android:textColor="@android:color/white"-->
-        <!--android:textSize="35sp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--android:layout_marginTop="8dp"-->
 
-        <!--app:layout_constraintHorizontal_bias="0.499"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:text="发送消息"-->
+        <!--android:textAllCaps="false"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
         <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--fbutton:cornerRadius="5dp"-->
-        <!--fbutton:layout_constraintBottom_toTopOf="@+id/btn_client_connect"-->
-        <!--fbutton:layout_constraintHorizontal_bias="0.657"-->
-        <!--fbutton:shadowColor="@color/redbrown"-->
-        <!--fbutton:shadowEnabled="true"-->
-        <!--fbutton:shadowHeight="5dp" />-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/btn_client_connect"/>-->
+
+    <info.hoang8f.widget.FButton
+        android:id="@+id/btn_client_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="开始搜索"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        fbutton:cornerRadius="5dp"
+        fbutton:layout_constraintBottom_toTopOf="@+id/btn_client_connect"
+        fbutton:layout_constraintHorizontal_bias="0.657"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="386dp" />
 
 </android.support.constraint.ConstraintLayout>

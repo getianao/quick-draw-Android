@@ -120,13 +120,11 @@ public class GameFragment extends Fragment {
         myData.setCurPutDownTime(System.currentTimeMillis());
         myData.setLastPutDownTime(myData.getCurPutDownTime());
 
-
         // 传感器监听事件类
         SensorEventListener mySensorEventListener = new SensorEventListener() {
             // 传感器数据变化响应时触发
             @Override
             public void onSensorChanged(SensorEvent event) {
-//                startBtn.setText("1");
                 sensor();
 
                 // 手机朝下放置
@@ -136,16 +134,16 @@ public class GameFragment extends Fragment {
                         myData.setPutDownByMistake(false);//超过2s
                     }
                 }
-                //startBtn.setText("游戏将在3秒后开始...");
+                startBtn.setText("1");
                 //向下放置,即开始准备
                 // 当手机朝下放置时（y轴加速度最小为-10）,且和上一次放下手机隔了2秒(isPutDownByMistake)，作出提示，3秒后开始游戏
                 //event.values[1] < -9.5 && !myData.isEnd() && !myData.isStart() && !myData.isReady() && !myData.isPutDownByMistake()
-                if (event.values[1] < -9.5 && !myData.isEnd() && !myData.isStart() && !myData.isReady() && !myData.isPutDownByMistake()) {
+                if (event.values[1] < -9.5 && !myData.isEnd() && !myData.isStart()
+                        && !myData.isReady() && !myData.isPutDownByMistake()) {
                     // 播放系统提示音
-                    startBtn.setText("2");
-                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
-                    r.play();
+//                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//                    Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
+//                    r.play();
                     startBtn.setText("游戏将在3秒后开始...");
                     startBtn.refreshDrawableState();
 //                    getActivity().runOnUiThread(new Runnable() {
@@ -155,10 +153,11 @@ public class GameFragment extends Fragment {
 //                        }
 //                    });
                     try {
-                        //Thread.sleep(3000);
+                        Thread.sleep(3000);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    startBtn.setText("2");
 
                     // 震动以提示开始 (张子煜的手机会闪退)
                     myData.setReady(true);
@@ -168,6 +167,7 @@ public class GameFragment extends Fragment {
                     myData.setStartTime(System.currentTimeMillis() + (int) (5 + Math.random() * (10)) * 1000);//5~14S的随机时间
                     myData.setStart(false);
                     myData.setReady(true);
+                    startBtn.setText("");
                     return;
                 }
 
@@ -261,7 +261,8 @@ public class GameFragment extends Fragment {
             // 传感器精度响应时触发
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
-            }        };
+            }
+        };
 
 
         //注册listener，第三个参数是检测的精确度

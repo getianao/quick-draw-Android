@@ -128,7 +128,7 @@ public class MainActivity extends BaseActivity {
         startNewGame.setTypeface(typeface);
         joinGame.setTypeface(typeface);
 
-        //加入游戏
+        //开始游戏
         startNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

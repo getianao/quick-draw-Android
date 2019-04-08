@@ -112,7 +112,7 @@ public class ServerActivity extends BaseActivity {
             getSupportFragmentManager()
                     .beginTransaction()
 //                    .add(R.id.server_fragment_container, mServerFragment)
-                    .add(R.id.server_fragment_container, mGameFragment)
+                    .add(R.id.server_fragment_container, mServerFragment)
                     .commit();
         }
 

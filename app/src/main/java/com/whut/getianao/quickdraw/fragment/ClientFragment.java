@@ -26,7 +26,7 @@ public class ClientFragment extends Fragment {
     private ClientActivity parentActivity;
     private TextView status_init;//连接信息
     private TextView text_state;//消息显示
-    private Button btn_connectToServer;
+    private info.hoang8f.widget.FButton btn_connectToServer;
     private Button  btn_sendToServer;
     private View view;
     private CustomVideoView videoView;

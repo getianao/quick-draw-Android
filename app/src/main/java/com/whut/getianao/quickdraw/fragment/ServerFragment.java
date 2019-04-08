@@ -117,6 +117,8 @@ public class ServerFragment extends Fragment {
                 parentActivity.createWifiHotspot();
                 //todo：热点开启后进行广播，界面显示ip
                 text_state.setText(parentActivity.getWifiApIpAddress());
+                btn_createWifi.setEnabled(false);
+                btn_createWifi.setText("等待连接");
             }
         });
         //关闭热点
