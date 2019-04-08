@@ -121,39 +121,7 @@ public class GameFragment extends Fragment {
         mySensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-<<<<<<< Updated upstream
-                sensor();
 
-                // 手机朝下放置
-                if (event.values[1] < -9.5) {
-                    myData.setCurPutDownTime(System.currentTimeMillis());
-                    if (myData.getCurPutDownTime() - myData.getLastPutDownTime() > 2000) {
-                        myData.setPutDownByMistake(false);//超过2s
-                    }
-                }
-                startBtn.setText("1");
-                //向下放置,即开始准备
-                // 当手机朝下放置时（y轴加速度最小为-10）,且和上一次放下手机隔了2秒(isPutDownByMistake)，作出提示，3秒后开始游戏
-                //event.values[1] < -9.5 && !myData.isEnd() && !myData.isStart() && !myData.isReady() && !myData.isPutDownByMistake()
-                if (event.values[1] < -9.5 && !myData.isEnd() && !myData.isStart()
-                        && !myData.isReady() && !myData.isPutDownByMistake()) {
-                    // 播放系统提示音
-//                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                    Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
-//                    r.play();
-                    startBtn.setText("游戏将在3秒后开始...");
-                    startBtn.refreshDrawableState();
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//
-//                        }
-//                    });
-                    try {
-                        Thread.sleep(3000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-=======
                 sensor(event);
                 //游戏还没结束
                 if (!myData.isEnd()) {
@@ -168,38 +136,8 @@ public class GameFragment extends Fragment {
                         } else {
                             startBtn.setText("请保持手机稳定，游戏将在" + (3 - ((int) diffValue / 1000)) + "秒后开始...");
                         }
->>>>>>> Stashed changes
                     }
-                    startBtn.setText("2");
 
-<<<<<<< Updated upstream
-                    // 震动以提示开始 (张子煜的手机会闪退)
-                    myData.setReady(true);
-                    Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
-                    vibrator.vibrate(350);
-                    // 设置开始游戏时间
-                    myData.setStartTime(System.currentTimeMillis() + (int) (5 + Math.random() * (10)) * 1000);//5~14S的随机时间
-                    myData.setStart(false);
-                    myData.setReady(true);
-                    startBtn.setText("");
-                    return;
-                }
-
-                // 手机拿起时
-                if (event.values[1] > 0) {
-                    myData.setCurPutDownTime(System.currentTimeMillis());
-                    myData.setLastPutDownTime(myData.getCurPutDownTime());
-
-                    // 两次放下手机的时间
-                    textView9.setText(String.valueOf(myData.getLastPutDownTime()));
-                    textView10.setText(String.valueOf(myData.getCurPutDownTime()));
-                    // 显示每个方向的加速度 （保留小数点后两位有效）
-
-                    myData.setxPre(event.values[0]);
-                    myData.setyPre(event.values[1]);
-                    myData.setzPre(event.values[2]);
-
-=======
                     // 当手机朝下放置,且已稳定，且游戏未准备，且游戏未开始
                     if (event.values[1] < -9 && !myData.isPutDownByMistake() && !myData.isReady() && !myData.isStart()) {
                         try {
@@ -223,7 +161,6 @@ public class GameFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
->>>>>>> Stashed changes
 
                     // 手机拿起时,且游戏还没开始（可能已稳定，可能已准备）
                     if (event.values[1] > -9 && !myData.isStart()) {
@@ -237,7 +174,7 @@ public class GameFragment extends Fragment {
                     }
 
                     //已稳定，游戏已准备，但没有开始
-                    if (!myData.isPutDownByMistake() && myData.isReady() && !myData.isStart() ) {
+                    if (!myData.isPutDownByMistake() && myData.isReady() && !myData.isStart()) {
                         //倒数后发出fire指令
                         long dTime = myData.getStartTime() - System.currentTimeMillis();
                         if (dTime <= 0) {//倒数结束
@@ -288,7 +225,6 @@ public class GameFragment extends Fragment {
 //                    myData.setReady(false);
 //                    myData.setStart(false);
                 }
-
 
 
             }
