@@ -206,8 +206,12 @@ public class ClientActivity extends BaseActivity {
             ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.client_fragment_container))
                     .onKeyDown(keyCode, event);
             return true;
-        } else {
-            return false;
         }
+        if (getSupportFragmentManager().findFragmentById(R.id.server_fragment_container) instanceof GameFragment) {
+            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.server_fragment_container))
+                    .onKeyDown(keyCode, event);
+            return true;
+        }
+        return false;
     }
 }

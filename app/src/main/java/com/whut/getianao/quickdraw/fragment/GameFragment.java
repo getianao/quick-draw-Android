@@ -28,10 +28,10 @@ import static android.content.Context.VIBRATOR_SERVICE;
 public class GameFragment extends Fragment {
 
     private View view;
-    GameData myData = new GameData();//自己数据
-    GameData oppsiteData = new GameData();//对方数据
+    private GameData myData = new GameData();//自己数据
+    private GameData oppsiteData = new GameData();//对方数据
     private Button startBtn;
-    private Button button2 ;
+    private Button button2;
     private TextView textView1;
     private TextView textView2;
     private TextView textView3;
@@ -42,6 +42,7 @@ public class GameFragment extends Fragment {
     private TextView textView8;
     private TextView textView9;
     private TextView textView10;
+    private SensorEventListener mySensorEventListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,7 +56,7 @@ public class GameFragment extends Fragment {
     }
 
     private void btnInit() {
-        startBtn =  view.findViewById(R.id.jbutton);
+        startBtn = view.findViewById(R.id.jbutton);
         button2 = (Button) view.findViewById(R.id.button2);
         textView1 = (TextView) view.findViewById(R.id.textView1);
         textView2 = (TextView) view.findViewById(R.id.textView2);
@@ -81,7 +82,6 @@ public class GameFragment extends Fragment {
 
     // 音量键监听
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             if (myData.isStart() && myData.getyPre() > -4) {
                 startBtn.setText("开火成功");
@@ -100,7 +100,6 @@ public class GameFragment extends Fragment {
                 myData.setFireTime(System.currentTimeMillis());
                 myData.setEnd(true);
             }
-
             button2.setText("开火");
             this.myData.setFireBtnPressed(true);
             return true;
@@ -110,21 +109,19 @@ public class GameFragment extends Fragment {
     }
 
     public void init() {
-
         // 得到传感器管理对象
         final SensorManager sensorManager = (SensorManager) getContext().getSystemService(SENSOR_SERVICE);
         // 得到传感器对象
         Sensor gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
         // 初始化两个时间相等
         myData.setCurPutDownTime(System.currentTimeMillis());
         myData.setLastPutDownTime(myData.getCurPutDownTime());
 
         // 传感器监听事件类
-        SensorEventListener mySensorEventListener = new SensorEventListener() {
-            // 传感器数据变化响应时触发
+        mySensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
+<<<<<<< Updated upstream
                 sensor();
 
                 // 手机朝下放置
@@ -156,9 +153,26 @@ public class GameFragment extends Fragment {
                         Thread.sleep(3000);
                     } catch (Exception e) {
                         e.printStackTrace();
+=======
+                sensor(event);
+                //游戏还没结束
+                if (!myData.isEnd()) {
+                    // 手机朝下放置，但还没稳定，游戏未准备，游戏未开始
+                    if (event.values[1] < -9 && myData.isPutDownByMistake() && !myData.isReady() && !myData.isStart()) {
+                        long diffValue = myData.getCurPutDownTime() - myData.getLastPutDownTime();
+                        //astPutDownTime是保持刚放下一瞬间的时刻，currentTimeMillis保持刷新
+                        myData.setCurPutDownTime(System.currentTimeMillis());
+                        //超过2s时，标志稳定
+                        if (diffValue > 3000) {
+                            myData.setPutDownByMistake(false);
+                        } else {
+                            startBtn.setText("请保持手机稳定，游戏将在" + (3 - ((int) diffValue / 1000)) + "秒后开始...");
+                        }
+>>>>>>> Stashed changes
                     }
                     startBtn.setText("2");
 
+<<<<<<< Updated upstream
                     // 震动以提示开始 (张子煜的手机会闪退)
                     myData.setReady(true);
                     Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
@@ -185,12 +199,67 @@ public class GameFragment extends Fragment {
                     myData.setyPre(event.values[1]);
                     myData.setzPre(event.values[2]);
 
+=======
+                    // 当手机朝下放置,且已稳定，且游戏未准备，且游戏未开始
+                    if (event.values[1] < -9 && !myData.isPutDownByMistake() && !myData.isReady() && !myData.isStart()) {
+                        try {
+                            //保持CurPutDownTime刷新
+                            myData.setCurPutDownTime(System.currentTimeMillis());
+                            // 播放系统提示音
+                            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                            Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
+                            r.play();
+                            //已稳定，提示游戏即将开始
 
+                            // 震动以提示开始 (张子煜的手机会闪退)
+                            Vibrator vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
+                            vibrator.vibrate(350);
+                            // 设置开始游戏时间
+                            myData.setStartTime(System.currentTimeMillis() + (int) (5 + Math.random() * (10)) * 1000);//5~14S的随机时间
+                            myData.setStart(false);
+                            myData.setReady(true);
+                            return;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+>>>>>>> Stashed changes
 
+                    // 手机拿起时,且游戏还没开始（可能已稳定，可能已准备）
+                    if (event.values[1] > -9 && !myData.isStart()) {
+                        //保持CurPutDownTime和LastPutDownTime是相同的
+                        myData.setCurPutDownTime(System.currentTimeMillis());
+                        myData.setLastPutDownTime(myData.getCurPutDownTime());
+                        //重置稳定状态、游戏准备状态
+                        myData.setPutDownByMistake(true);
+                        myData.setReady(false);
+                        startBtn.setText("请保持手机向下");
+                    }
+
+                    //已稳定，游戏已准备，但没有开始
+                    if (!myData.isPutDownByMistake() && myData.isReady() && !myData.isStart() ) {
+                        //倒数后发出fire指令
+                        long dTime = myData.getStartTime() - System.currentTimeMillis();
+                        if (dTime <= 0) {//倒数结束
+                            startBtn.setText("FIRE！");
+                            myData.setStart(true);
+                            return;
+                        }
+                        startBtn.setText("游戏将在" + (int) dTime / 1000 + "秒后开始...");
+                        return;
+                    }
+                    //已稳定，游戏已准备，游戏已开始,且5s后游戏没有结束
+                    if (!myData.isPutDownByMistake() && myData.isReady() && myData.isStart() && System.currentTimeMillis() - myData.getStartTime() > 5000) {
+                        startBtn.setText("游戏超时");
+                        //重置状态，强行结束
+                        myData.setPutDownByMistake(true);
+                        myData.setReady(false);
+                        myData.setStart(false);
+                        myData.setEnd(true);
+                    }
                 }
-                //游戏胜负判断
+                //游戏结束
                 if (myData.isEnd() || oppsiteData.isEnd()) {
-
                     //其中有一方没有成功开火
                     if (!myData.isFireBtnPressed() && oppsiteData.isFireBtnPressed()) {
                         //本用户输了
@@ -202,60 +271,26 @@ public class GameFragment extends Fragment {
                     if (!myData.isFireBtnPressed() && !oppsiteData.isFireBtnPressed()) {
                         //我方更早提前开启,对方赢
                         if (myData.getFireTime() - myData.getStartTime() < oppsiteData.getFireTime() - oppsiteData.getStartTime()) {
-
                         }
                         //对方更早提前开枪,我方赢
                         else {
-
                         }
                     }
                     //两方都成功开火
                     //我方更早提前开枪,我方赢
                     if (myData.getFireTime() - myData.getStartTime() < oppsiteData.getFireTime() - oppsiteData.getStartTime()) {
-
                     }
                     //对方更早提前开枪,对方赢
                     else {
-
                     }
-
                     //复原
-                    myData.setEnd(false);
-                    myData.setReady(false);
-                    myData.setStart(false);
+//                    myData.setEnd(false);
+//                    myData.setReady(false);
+//                    myData.setStart(false);
                 }
 
 
-                //游戏开始,允许开始5S后没有人开火,游戏结束
-                if (myData.isStart() && System.currentTimeMillis() - myData.getStartTime() > 5000) {
-                    startBtn.setText("游戏超时");
 
-                    myData.setReady(false);
-                    myData.setStart(false);
-                    myData.setEnd(true);
-                }
-
-                //游戏准备过程中,动了手机
-                if (myData.isReady() && !myData.isStart() && myData.getyPre() > -7) {
-                    myData.setReady(false);
-                    myData.setMoveWhenReady(true);
-                    startBtn.setText("准备过程中请保持手机朝下,请重新准备");
-                    return;
-                }
-
-                //在准备过程中 且没有开始
-                //提示游戏将在多久后开始
-                else if (myData.isReady() && !myData.isStart()) {
-                    long dTime = myData.getStartTime() - System.currentTimeMillis();
-                    if (dTime < 0) {
-                        startBtn.setText("准备就绪");
-                        myData.setReady(false);
-                        myData.setStart(true);
-                        return;
-                    }
-                    startBtn.setText("游戏将在" + (int) dTime / 1000 + "秒后开始...");
-                    return;
-                }
             }
 
             // 传感器精度响应时触发
@@ -273,9 +308,17 @@ public class GameFragment extends Fragment {
 
     }
 
-    private void sensor(){
+    private void sensor(SensorEvent event) {
+        //加速度
+        myData.setxPre(event.values[0]);
+        myData.setyPre(event.values[1]);
+        myData.setzPre(event.values[2]);
         textView1.setText(String.valueOf("x轴加速度" + (float) (Math.round(myData.getxPre() * 100)) / 100));
         textView2.setText(String.valueOf("y轴加速度" + (float) (Math.round(myData.getyPre() * 100)) / 100));
         textView3.setText(String.valueOf("z轴加速度" + (float) (Math.round(myData.getzPre() * 100)) / 100));
+
+        // 两次放下手机的时间
+        textView9.setText(String.valueOf(myData.getLastPutDownTime()));
+        textView10.setText(String.valueOf(myData.getCurPutDownTime()));
     }
 }

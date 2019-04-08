@@ -332,15 +332,19 @@ public class ServerActivity extends BaseActivity {
         //todo：通知客户端进入游戏
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (getSupportFragmentManager().findFragmentById(R.id.client_fragment_container) instanceof GameFragment) {
-//            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.client_fragment_container))
-//                    .onKeyDown(keyCode, event);
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (getSupportFragmentManager().findFragmentById(R.id.client_fragment_container) instanceof GameFragment) {
+            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.client_fragment_container))
+                    .onKeyDown(keyCode, event);
+            return true;
+        }
+        if (getSupportFragmentManager().findFragmentById(R.id.server_fragment_container) instanceof GameFragment) {
+            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.server_fragment_container))
+                    .onKeyDown(keyCode, event);
+            return true;
+        }
+        return false;
+    }
 }
 
