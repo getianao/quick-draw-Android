@@ -10,7 +10,7 @@
         android:id="@+id/Client_videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="102dp"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="10dp"></com.whut.getianao.quickdraw.view.CustomVideoView>
 
     <TextView

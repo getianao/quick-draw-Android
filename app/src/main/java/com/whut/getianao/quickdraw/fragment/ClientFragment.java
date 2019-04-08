@@ -27,7 +27,7 @@ public class ClientFragment extends Fragment {
     private TextView status_init;//连接信息
     private TextView text_state;//消息显示
     private info.hoang8f.widget.FButton btn_connectToServer;
-    private Button  btn_sendToServer;
+    private info.hoang8f.widget.FButton  btn_sendToServer;
     private View view;
     private CustomVideoView videoView;
 
@@ -91,6 +91,8 @@ public class ClientFragment extends Fragment {
         btn_sendToServer = view.findViewById(R.id.btn_client_send);
         text_state = view.findViewById(R.id.text_client_status);
         status_init = view.findViewById(R.id.text_client_init);
+        btn_connectToServer.setButtonColor(getResources().getColor(R.color.red));
+        btn_sendToServer.setButtonColor(getResources().getColor(R.color.red));
 
         btn_sendToServer.setVisibility(View.GONE);
         playVedio();

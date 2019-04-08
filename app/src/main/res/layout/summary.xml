@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <info.hoang8f.widget.FButton
+        android:id="@+id/game_again"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        android:text="再来一局"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        fbutton:cornerRadius="5dp"
+        fbutton:layout_constraintBottom_toTopOf="@+id/quit"
+        fbutton:layout_constraintEnd_toEndOf="parent"
+        fbutton:layout_constraintHorizontal_bias="0.499"
+        fbutton:layout_constraintStart_toStartOf="parent"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/myresult"
+        android:layout_width="166dp"
+        android:layout_height="146dp"
+        android:text="1111111111111"
+        android:textSize="30sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="174dp" />
+
+    <TextView
+        android:id="@+id/eneryresult"
+        android:layout_width="166dp"
+        android:layout_height="146dp"
+        android:text="2222222222"
+        android:textSize="30sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="484dp"
+        tools:layout_editor_absoluteY="177dp" />
+
+    <info.hoang8f.widget.FButton
+        android:id="@+id/quit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="128dp"
+        android:layout_marginBottom="88dp"
+        android:text="退出房间"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"
+        fbutton:cornerRadius="5dp"
+        fbutton:layout_constraintBottom_toBottomOf="parent"
+        fbutton:layout_constraintEnd_toEndOf="parent"
+        fbutton:layout_constraintHorizontal_bias="0.63"
+        fbutton:layout_constraintStart_toStartOf="parent"
+        fbutton:shadowColor="@color/redbrown"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp"
+        tools:ignore="MissingConstraints" />
+
+</android.support.constraint.ConstraintLayout>
