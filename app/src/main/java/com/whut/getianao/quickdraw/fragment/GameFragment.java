@@ -121,10 +121,7 @@ public class GameFragment extends Fragment {
         mySensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
                 sensor(event);
                 //游戏还没结束
                 if (!myData.isEnd()) {
@@ -177,11 +174,9 @@ public class GameFragment extends Fragment {
                     }
 
                     //已稳定，游戏已准备，但没有开始
-<<<<<<< Updated upstream
-                    if (!myData.isPutDownByMistake() && myData.isReady() && !myData.isStart()) {
-=======
+
                     if (!myData.isPutDownByMistake() && myData.isReady() && !myData.isStart() ) {
->>>>>>> Stashed changes
+
                         //倒数后发出fire指令
                         long dTime = myData.getStartTime() - System.currentTimeMillis();
                         if (dTime <= 0) {//倒数结束
@@ -232,12 +227,7 @@ public class GameFragment extends Fragment {
 //                    myData.setReady(false);
 //                    myData.setStart(false);
                 }
-
-
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
+                
             }
 
             // 传感器精度响应时触发
