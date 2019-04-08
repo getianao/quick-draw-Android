@@ -43,11 +43,16 @@ public class ServerActivity extends BaseActivity {
     public static final int SEND_MSG_SUCCSEE = 3;//发送消息成功
     public static final int SEND_MSG_ERROR = 4;//发送消息失败
     public static final int GET_MSG = 6;//获取新消息
+    private static final String WIFI_HOTSPOT_SSID = "TEST";// 热点名称
+    private static final String WIFI_HOTSPOT_PSW = "12345678";  // 热点名称
+    private static final int PORT = 1234; //端口号
 
     private ServerFragment mServerFragment;
     private GameFragment mGameFragment;
-
     private WifiManager wifiManager;
+    private Boolean isReady;
+    private ConnectThread connectThread; // 连接线程
+    private ListenerThread listenerThread; //监听线程
 
     public Boolean getReady() {
         return isReady;
@@ -60,18 +65,6 @@ public class ServerActivity extends BaseActivity {
     public ListenerThread getListenerThread() {
         return listenerThread;
     }
-
-    private Boolean isReady;
-    // 连接线程
-    private ConnectThread connectThread;
-    //监听线程
-    private ListenerThread listenerThread;
-    // 热点名称
-    private static final String WIFI_HOTSPOT_SSID = "TEST";
-    // 热点名称
-    private static final String WIFI_HOTSPOT_PSW = "12345678";
-    //端口号
-    private static final int PORT = 1234;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -106,7 +99,6 @@ public class ServerActivity extends BaseActivity {
                         }
                     }.start();
                     isReady = true;
-
                     break;
                 case SEND_MSG_SUCCSEE:
                     mServerFragment.getText_state().setText("发送消息成功:" + msg.getData().getString("MSG"));
@@ -126,20 +118,24 @@ public class ServerActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server);
 
-        mServerFragment = new ServerFragment();
-        mGameFragment = new GameFragment();
+        init();
 
-        //todo:跳过搜索
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.server_fragment_container, mServerFragment)
                     .commit();
         }
+    }
+
+    private void init() {
+        mServerFragment = new ServerFragment();
+        mGameFragment = new GameFragment();
 
         isReady = false;
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
         //开启监听线程
         listenerThread = new ListenerThread(PORT, handler);
         listenerThread.start();
@@ -160,7 +156,6 @@ public class ServerActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
 
     //获取热点本机ip
     public String getWifiApIpAddress() {
@@ -183,7 +178,6 @@ public class ServerActivity extends BaseActivity {
         }
         return null;
     }
-
 
     //创建Wifi热点
     public void createWifiHotspot() {
@@ -225,7 +219,7 @@ public class ServerActivity extends BaseActivity {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
-                        openAP(1000);
+                        openAP();
                     }
                 })
                 .addAction("退出", new QMUIDialogAction.ActionListener() {
@@ -244,7 +238,7 @@ public class ServerActivity extends BaseActivity {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
-                        openAP(1001);
+                        openAP();
                     }
                 })
                 .addAction("退出", new QMUIDialogAction.ActionListener() {
@@ -256,31 +250,12 @@ public class ServerActivity extends BaseActivity {
     }
 
     //打开系统的便携式热点界面
-    public void openAP(int requestCode) {
+    public void openAP() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
         ComponentName com = new ComponentName("com.android.settings", "com.android.settings.TetherSettings");
         intent.setComponent(com);
-        startActivityForResult(intent, requestCode);
-    }
-
-    //判断用户是否开启热点
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000) {
-            if (!isWifiApOpen(this)) {
-                showRequestApDialog();
-            } else {
-                //todo:已连接
-            }
-        } else if (requestCode == 1001) {
-            if (isWifiApOpen(this)) {
-                showRequestApDialog();
-            } else {
-                //todo:未连接
-            }
-        }
+        startActivity(intent);
     }
 
     //判断ap状态
@@ -342,15 +317,6 @@ public class ServerActivity extends BaseActivity {
             e.printStackTrace();
             mServerFragment.getText_state().setText("创建热点失败");
         }
-    }
-
-    //跳转、进入游戏
-    public void gotoGame() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .addToBackStack(null)  //将当前fragment加入到返回栈中
-                .replace(R.id.server_fragment_container, mGameFragment).commit();
-        //todo：通知客户端进入游戏
     }
 
     @Override

@@ -24,9 +24,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
-
-
+        init();
     }
 
     @Override
@@ -38,38 +36,27 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
+        super.onPause();
         stopplayBGM();
         stopplayVideo();
-        super.onPause();
     }
 
-    //播放bgm
-    private  void  playBGM()
-    {
-        mp =MediaPlayer.create(this, R.raw.bgm);
+    private void playBGM() {
         mp.start();
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mp.start();
-            }
-        });
     }
-    private  void  stopplayBGM()
-    {
+
+    private void stopplayBGM() {
         mp.stop();
     }
-    private  void  stopplayVideo()
-    {
-        //stop video
+
+    private void stopplayVideo() {
         videoView.stopPlayback();
     }
-    private void playVedio(){
-        videoView =  findViewById(R.id.main_videoView);
-        videoView.setVideoURI(Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.main_background));
-        //播放
+
+    //播放背景视频
+    private void playVedio() {
+        videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_background));
         videoView.start();
-        //循环播放
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -83,24 +70,20 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-    private void playVedioIntro(){
-        videoView =  findViewById(R.id.main_videoView);
-        videoView.setVideoURI(Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.client_background));
-        //播放
+
+    //播放演示视频
+    private void playVedioIntro() {
+        videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.client_background));
         videoView.start();
-        //循环播放
+        //播放完恢复主页面
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                // reshow three btns
                 startNewGame.setVisibility(View.VISIBLE);
                 joinGame.setVisibility(View.VISIBLE);
                 btnIntro.setVisibility(View.VISIBLE);
-
-                // play main video
                 playVedio();
                 playBGM();
-
                 mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
                     @Override
                     public boolean onInfo(MediaPlayer mp, int what, int extra) {
@@ -110,24 +93,33 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-    /**
-     * 初始化
-     */
-    private void initView() {
+
+    private void init() {
+        //button
         startNewGame = findViewById(R.id.tv_startNewGame);
         joinGame = findViewById(R.id.tv_joinGame);
         btnIntro = findViewById(R.id.tv_btnIntro);
-
         startNewGame.setButtonColor(getResources().getColor(R.color.red));
         joinGame.setButtonColor(getResources().getColor(R.color.red));
         btnIntro.setButtonColor(getResources().getColor(R.color.red));
 
+        //bgm
+        mp = MediaPlayer.create(this, R.raw.bgm);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.start();
+            }
+        });
 
-        String  font="fonts/BigMountain.ttf";
-        Typeface typeface=Typeface.createFromAsset(getAssets(),font);
-        startNewGame.setTypeface(typeface);
-        joinGame.setTypeface(typeface);
+        //video
+        videoView = findViewById(R.id.main_videoView);
 
+        bindBtnOnClickListener();
+    }
+
+    //按钮绑定
+    private void bindBtnOnClickListener() {
         //开始游戏
         startNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,18 +140,12 @@ public class MainActivity extends BaseActivity {
         btnIntro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopplayBGM();
-
-                // hide three btns
                 startNewGame.setVisibility(View.INVISIBLE);
                 joinGame.setVisibility(View.INVISIBLE);
                 btnIntro.setVisibility(View.INVISIBLE);
+                stopplayBGM();
                 playVedioIntro();
             }
         });
-
-
-
     }
-
 }

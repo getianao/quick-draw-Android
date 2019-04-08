@@ -44,9 +44,15 @@ public class ClientActivity extends BaseActivity {
     public static final int SEND_MSG_SUCCSEE = 3;//发送消息成功
     public static final int SEND_MSG_ERROR = 4;//发送消息失败
     public static final int GET_MSG = 6;//获取新消息
+    private static final String WIFI_HOTSPOT_SSID = "TEST"; // 热点名称
+    private static final String WIFI_HOTSPOT_PSW = "12345678"; // 热点名称
+    private static final int PORT = 1234; //端口号
 
     private ClientFragment mClientFragment;
     private GameFragment mGameFragment;
+    private ConnectThread connectThread;// 连接线程
+    private ListenerThread listenerThread;//监听线程
+    private WifiManager wifiManager;
 
     public ConnectThread getConnectThread() {
         return connectThread;
@@ -56,18 +62,6 @@ public class ClientActivity extends BaseActivity {
         return listenerThread;
     }
 
-    // 连接线程
-    private ConnectThread connectThread;
-    //监听线程
-    private ListenerThread listenerThread;
-    // 热点名称
-    private static final String WIFI_HOTSPOT_SSID = "TEST";
-    // 热点名称
-    private static final String WIFI_HOTSPOT_PSW = "12345678";
-    //端口号
-    private static final int PORT = 1234;
-    private WifiManager wifiManager;
-
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
@@ -75,6 +69,7 @@ public class ClientActivity extends BaseActivity {
             switch (msg.what) {
                 case DEVICE_CONNECTED:
                     mClientFragment.getText_state().setText("设备连接成功");
+                    //结束TipDialog
                     mClientFragment.getTipDialog().dismiss();
                     mClientFragment.getText_state().setText("已连接");
                     //显示3s成功提示
@@ -89,14 +84,13 @@ public class ClientActivity extends BaseActivity {
                                 e.printStackTrace();
                             }
                             mClientFragment.getAcceptDialog().dismiss();
+                            //跳转GameFragment
                             getSupportFragmentManager()
                                     .beginTransaction()
                                     .addToBackStack(null)  //将当前fragment加入到返回栈中
                                     .replace(R.id.client_fragment_container, mGameFragment).commit();
                         }
                     }.start();
-                    //跳转游戏界面
-
                     break;
                 case SEND_MSG_SUCCSEE:
                     mClientFragment.getText_state().setText("发送消息成功:" + msg.getData().getString("MSG"));
@@ -116,15 +110,15 @@ public class ClientActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
-        mClientFragment = new ClientFragment();
-        mGameFragment = new GameFragment();
+
+        init();
+
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.client_fragment_container, mClientFragment)
                     .commit();
         }
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }
 
     @Override
@@ -138,6 +132,11 @@ public class ClientActivity extends BaseActivity {
         }
     }
 
+    private void init() {
+        mClientFragment = new ClientFragment();
+        mGameFragment = new GameFragment();
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+    }
 
     /**
      * 获取已连接的热点路由
@@ -181,7 +180,7 @@ public class ClientActivity extends BaseActivity {
     public boolean connectToServer() {
         WifiAdmin wifi = new WifiAdmin(getApplicationContext());
         //必须关闭热点，重新搜索
-        if(isWifiApOpen(ClientActivity.this)==true){
+        if (isWifiApOpen(ClientActivity.this) == true) {
             closeWifiHotspot();
             return false;
         }
@@ -189,27 +188,17 @@ public class ClientActivity extends BaseActivity {
         if (wifi.isWifiEnable() == false) {
             wifi.openWifi();
             return false;
-    }
+        }
         //一直搜索直到连接热点
         while (wifi.addNetwork(wifi.CreateWifiInfo(WIFI_HOTSPOT_SSID, WIFI_HOTSPOT_PSW, 3)) == false) {
             //死循环
         }
-
         //开启连接线程
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6000);//todo:开启、扫描wifi需要时间，应该监听一个wifi的广播
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            mClientFragment.getStatus_init().setText("已连接到："
-//                                    + wifiManager.getConnectionInfo().getSSID()
-//                                    + "\nIP:" + getIp()
-//                                    + "\n路由：" + getWifiRouteIPAddress(ClientActivity.this));
-//                        }
-//                    });
+                    Thread.sleep(6000);
                     Socket socket = new Socket(getWifiRouteIPAddress(ClientActivity.this), PORT);
                     connectThread = new ConnectThread(ClientActivity.this, socket, handler);
                     connectThread.start();
