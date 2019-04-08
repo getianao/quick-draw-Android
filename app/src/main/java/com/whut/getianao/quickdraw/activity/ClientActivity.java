@@ -9,9 +9,11 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -75,7 +77,7 @@ public class ClientActivity extends BaseActivity {
                 case GET_MSG:
                     //text_state.setText("收到消息:" + msg.getData().getString("MSG"));
                     //收到服务器发来的开始游戏的指令
-                    if(msg.getData().getString("MSG").equals("start_game!")){
+                    if (msg.getData().getString("MSG").equals("start_game!")) {
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .addToBackStack(null)  //将当前fragment加入到返回栈中
@@ -90,8 +92,8 @@ public class ClientActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
-        mClientFragment=new ClientFragment();
-        mGameFragment=new GameFragment();
+        mClientFragment = new ClientFragment();
+        mGameFragment = new GameFragment();
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -104,14 +106,13 @@ public class ClientActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(listenerThread!=null){
+        if (listenerThread != null) {
             listenerThread.interrupt();
         }
-        if(connectThread!=null){
+        if (connectThread != null) {
             connectThread.interrupt();
         }
     }
-
 
 
     /**
@@ -153,7 +154,7 @@ public class ClientActivity extends BaseActivity {
     }
 
     //连接服务器
-    public void connectToServer(){
+    public void connectToServer() {
         WifiAdmin wifi = new WifiAdmin(getApplicationContext());
 
         wifi.openWifi();
@@ -191,7 +192,7 @@ public class ClientActivity extends BaseActivity {
     }
 
     //向服务器发送数据
-    public void sendToServer(){
+    public void sendToServer() {
         if (connectThread != null) {
             connectThread.sendData("这是来自Wifi客户端的消息");
         } else {
@@ -199,4 +200,14 @@ public class ClientActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (getSupportFragmentManager().findFragmentById(R.id.client_fragment_container) instanceof GameFragment) {
+            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.client_fragment_container))
+                    .onKeyDown(keyCode, event);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

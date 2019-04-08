@@ -13,6 +13,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -106,10 +107,12 @@ public class ServerActivity extends BaseActivity {
         mServerFragment = new ServerFragment();
         mGameFragment = new GameFragment();
 
+        //todo:跳过搜索
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.server_fragment_container, mServerFragment)
+//                    .add(R.id.server_fragment_container, mServerFragment)
+                    .add(R.id.server_fragment_container, mGameFragment)
                     .commit();
         }
 
@@ -328,5 +331,16 @@ public class ServerActivity extends BaseActivity {
                 .replace(R.id.server_fragment_container, mGameFragment).commit();
         //todo：通知客户端进入游戏
     }
+
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (getSupportFragmentManager().findFragmentById(R.id.client_fragment_container) instanceof GameFragment) {
+//            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.client_fragment_container))
+//                    .onKeyDown(keyCode, event);
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 }
 

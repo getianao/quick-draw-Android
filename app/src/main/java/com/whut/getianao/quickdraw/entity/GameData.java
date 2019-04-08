@@ -1,22 +1,22 @@
-package com.whut.getianao.quickdraw.fragment;
+package com.whut.getianao.quickdraw.entity;
 
 public class GameData {
 
-    private boolean isReady;  // 是否在准备过程中
-    private long startTime;   // 开始游戏时间
-    private float xPre, yPre, zPre;   // 手机移动前的重量加速度
-    private boolean isStart;//是否以及开始游戏
+    private boolean isReady = false;  // 是否在准备过程中
+    private long startTime = 0;   // 开始游戏时间
+    private float xPre = 0, yPre = 0, zPre = 0;   // 手机移动前的重量加速度
+    private boolean isStart = false;//是否以及开始游戏
     private boolean fireBtnPressed; // 是否成功开枪
     private boolean isEnd; //本局游戏是否已经结束
     private long orderFireTime;//语音提示Fire的时间
     private boolean lowFireAngle;
-
 
     private long fireTime;//开火时间
     private long lastPutDownTime;       // 上一次手机放下的时间
     private long curPutDownTime;           // 当前手机放下的时间
     private boolean putDownByMistake = true;      // 不小心放下了手机
     private boolean moveWhenReady = false;
+
 
     public boolean isLowFireAngle() {
         return lowFireAngle;
@@ -57,8 +57,6 @@ public class GameData {
     public void setStart(boolean start) {
         isStart = start;
     }
-
-
 
 
     public boolean isReady() {
