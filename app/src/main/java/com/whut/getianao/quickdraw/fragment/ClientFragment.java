@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.whut.getianao.quickdraw.R;
 import com.whut.getianao.quickdraw.activity.ClientActivity;
 import com.whut.getianao.quickdraw.activity.ServerActivity;
@@ -27,9 +28,19 @@ public class ClientFragment extends Fragment {
     private TextView status_init;//连接信息
     private TextView text_state;//消息显示
     private info.hoang8f.widget.FButton btn_connectToServer;
+<<<<<<< Updated upstream
     private info.hoang8f.widget.FButton  btn_sendToServer;
+=======
+    private Button btn_sendToServer;
+>>>>>>> Stashed changes
     private View view;
     private CustomVideoView videoView;
+    private QMUITipDialog tipDialog;
+    private QMUITipDialog acceptDialog;
+
+    public QMUITipDialog getAcceptDialog() {
+        return acceptDialog;
+    }
 
 
     public TextView getStatus_init() {
@@ -38,6 +49,10 @@ public class ClientFragment extends Fragment {
 
     public TextView getText_state() {
         return text_state;
+    }
+
+    public QMUITipDialog getTipDialog() {
+        return tipDialog;
     }
 
     public Button getConnectToServer() {
@@ -52,22 +67,42 @@ public class ClientFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_client, container, false);
-        parentActivity= (ClientActivity) getActivity();
+        parentActivity = (ClientActivity) getActivity();
         initView(view);
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        playVedio();
+    }
+
     @Override
     public void onPause() {
         super.onPause();
         stopplayVideo();
     }
 
-    private void playVedio(){
-        videoView = view.findViewById(R.id.Client_videoView);
-        videoView.setVideoURI(Uri.parse("android.resource://"+getContext().getPackageName()+"/"+R.raw.client_background));
-        //播放
+    private void playVedio() {
         videoView.start();
-        //循环播放
+    }
+
+    private void stopplayVideo() {
+        videoView.stopPlayback();
+    }
+
+    private void initView(View view) {
+        btn_connectToServer = view.findViewById(R.id.btn_client_connect);
+        btn_sendToServer = view.findViewById(R.id.btn_client_send);
+        text_state = view.findViewById(R.id.text_client_status);
+        //status_init = view.findViewById(R.id.text_client_init);
+
+        btn_sendToServer.setVisibility(View.GONE);
+
+        videoView = view.findViewById(R.id.Client_videoView);
+
+        videoView.setVideoURI(Uri.parse("android.resource://" + getContext().getPackageName() + "/" + R.raw.client_background));
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -80,7 +115,19 @@ public class ClientFragment extends Fragment {
                 });
             }
         });
+
+        bindBtnOnClickListener();
+
+        tipDialog = new QMUITipDialog.Builder(getContext())
+                .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                .setTipWord("正在搜索")
+                .create();
+        acceptDialog = new QMUITipDialog.Builder(getContext())
+                .setIconType(QMUITipDialog.Builder.ICON_TYPE_SUCCESS)
+                .setTipWord("连接成功")
+                .create();
     }
+<<<<<<< Updated upstream
     private  void  stopplayVideo()
     {
         //stop video
@@ -93,16 +140,25 @@ public class ClientFragment extends Fragment {
         status_init = view.findViewById(R.id.text_client_init);
         btn_connectToServer.setButtonColor(getResources().getColor(R.color.red));
         btn_sendToServer.setButtonColor(getResources().getColor(R.color.red));
+=======
+>>>>>>> Stashed changes
 
-        btn_sendToServer.setVisibility(View.GONE);
-        playVedio();
+    private void bindBtnOnClickListener() {
         //连接至服务端热点
         btn_connectToServer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.connectToServer();
+                tipDialog.show();
+                if (parentActivity.connectToServer() == false) {
+                    //连接失败
+                    tipDialog.dismiss();
+                    return;
+                }
+                btn_connectToServer.setEnabled(false);
+                btn_connectToServer.setText("等待连接");
             }
         });
+
         //test:发送消息到服务器
         btn_sendToServer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,4 +167,5 @@ public class ClientFragment extends Fragment {
             }
         });
     }
+
 }

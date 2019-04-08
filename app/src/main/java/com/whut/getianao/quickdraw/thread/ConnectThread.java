@@ -32,7 +32,7 @@ public class ConnectThread extends Thread {
         if (socket == null) {
             return;
         }
-        handler.sendEmptyMessage(ServerActivity.DEVICE_CONNECTED);//message只有what值
+        handler.sendEmptyMessage(ServerActivity.DEVICE_CONNECTED);
         try {
             //获取数据流
             inputStream = socket.getInputStream();

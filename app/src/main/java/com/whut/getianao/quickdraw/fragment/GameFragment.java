@@ -227,7 +227,7 @@ public class GameFragment extends Fragment {
 //                    myData.setReady(false);
 //                    myData.setStart(false);
                 }
-                
+
             }
 
             // 传感器精度响应时触发

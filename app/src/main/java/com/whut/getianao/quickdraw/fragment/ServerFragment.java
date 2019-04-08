@@ -1,6 +1,7 @@
 package com.whut.getianao.quickdraw.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
+import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.whut.getianao.quickdraw.R;
 import com.whut.getianao.quickdraw.activity.GameActivity;
 import com.whut.getianao.quickdraw.activity.ServerActivity;
@@ -28,6 +32,16 @@ public class ServerFragment extends Fragment {
     private info.hoang8f.widget.FButton btn_startGame;
     private View view;
     private CustomVideoView videoView;
+    private QMUITipDialog tipDialog;
+    private QMUITipDialog acceptDialog;
+
+    public QMUITipDialog getTipDialog() {
+        return tipDialog;
+    }
+
+    public QMUITipDialog getAcceptDialog() {
+        return acceptDialog;
+    }
 
     public TextView getText_state() {
         return text_state;
@@ -49,25 +63,8 @@ public class ServerFragment extends Fragment {
         return btn_startGame;
     }
 
-    private void playVedio(){
-        videoView = view.findViewById(R.id.Server_videoView);
-        videoView.setVideoURI(Uri.parse("android.resource://"+getContext().getPackageName()+"/"+R.raw.client_background));
-        //播放
-        videoView.start();
-        //循环播放
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                videoView.start();
-                mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                    @Override
-                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                        return false;
-                    }
-                });
-            }
-        });
-    }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,30 +80,64 @@ public class ServerFragment extends Fragment {
         stopplayVideo();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        playVedio();
+    }
+
     //view设置
     private void initView(View view) {
         btn_createWifi = view.findViewById(R.id.create_wifi);
         btn_closeWifi = view.findViewById(R.id.close_wifi);
         btn_send = view.findViewById(R.id.send);
-        btn_startGame=view.findViewById(R.id.start_game);
+        btn_startGame = view.findViewById(R.id.start_game);
+        text_state = view.findViewById(R.id.receive);
+
+        //背景视频
+        videoView = view.findViewById(R.id.Server_videoView);
+        videoView.setVideoURI(Uri.parse("android.resource://" + getContext().getPackageName() + "/" + R.raw.client_background));
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoView.start();
+                mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                    @Override
+                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                        return false;
+                    }
+                });
+            }
+        });
+
         btn_createWifi.setButtonColor(getResources().getColor(R.color.red));
         btn_closeWifi.setButtonColor(getResources().getColor(R.color.red));
         btn_send.setButtonColor(getResources().getColor(R.color.red));
         btn_startGame.setButtonColor(getResources().getColor(R.color.red));
-
-        text_state = view.findViewById(R.id.receive);
         btn_startGame.setEnabled(false);//disable 开始游戏直到匹配到客户端
         btn_closeWifi.setVisibility(View.GONE);
         btn_send.setVisibility(View.GONE);
 
-        playVedio();
         bindBtnOnClickListener();
+
+        tipDialog = new QMUITipDialog.Builder(getContext())
+                .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                .setTipWord("正在搜索")
+                .create();
+        acceptDialog = new QMUITipDialog.Builder(getContext())
+                .setIconType(QMUITipDialog.Builder.ICON_TYPE_SUCCESS)
+                .setTipWord("连接成功")
+                .create();
     }
-    private  void  stopplayVideo()
-    {
-        //stop video
+
+    private void stopplayVideo() {
         videoView.stopPlayback();
     }
+
+    private void playVedio() {
+        videoView.start();
+    }
+
 
     //按钮绑定
     private void bindBtnOnClickListener() {
@@ -114,9 +145,13 @@ public class ServerFragment extends Fragment {
         btn_createWifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.createWifiHotspot();
+                tipDialog.show();
+                if(parentActivity.isWifiApOpen(getContext())==false){
+                    parentActivity.createWifiHotspot();
+                    tipDialog.dismiss();
+                    return;
+                }
                 //todo：热点开启后进行广播，界面显示ip
-                text_state.setText(parentActivity.getWifiApIpAddress());
                 btn_createWifi.setEnabled(false);
                 btn_createWifi.setText("等待连接");
             }
@@ -128,11 +163,12 @@ public class ServerFragment extends Fragment {
                 parentActivity.closeWifiHotspot();
             }
         });
+
         //发送数据
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (parentActivity.getConnectThread()!= null) {
+                if (parentActivity.getConnectThread() != null) {
                     parentActivity.getConnectThread().sendData("这是来自Wifi热点的消息");
                 } else {
                     Log.w("AAA", "connectThread == null");
@@ -144,12 +180,11 @@ public class ServerFragment extends Fragment {
         btn_startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(parentActivity.getReady()==true){
+                if (parentActivity.getReady() == true) {
                     parentActivity.gotoGame();
                 }
             }
         });
+
     }
-
-
 }

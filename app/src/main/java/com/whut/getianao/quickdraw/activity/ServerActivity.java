@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.whut.getianao.quickdraw.R;
 import com.whut.getianao.quickdraw.base.BaseActivity;
 import com.whut.getianao.quickdraw.fragment.GameFragment;
@@ -81,10 +82,31 @@ public class ServerActivity extends BaseActivity {
                     connectThread = new ConnectThread(ServerActivity.this, listenerThread.getSocket(), handler);
                     connectThread.start();
                 case DEVICE_CONNECTED:
-                    //设备连接成功，enable房主的开始游戏按钮
-                    mServerFragment.getText_state().setText("设备连接成功");
-                    mServerFragment.getBtn_startGame().setEnabled(true);
+                    //隐藏搜索提示
+                    mServerFragment.getTipDialog().dismiss();
+                    //提示可以开始
+                    mServerFragment.getText_state().setText("已连接");
+                    //显示3s成功提示
+                    mServerFragment.getAcceptDialog().show();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+                                Thread.sleep(3000);//休眠3秒
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            mServerFragment.getAcceptDialog().dismiss();
+                            //跳转游戏界面
+                            getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .addToBackStack(null)  //将当前fragment加入到返回栈中
+                                    .replace(R.id.server_fragment_container, mGameFragment).commit();
+                        }
+                    }.start();
                     isReady = true;
+
                     break;
                 case SEND_MSG_SUCCSEE:
                     mServerFragment.getText_state().setText("发送消息成功:" + msg.getData().getString("MSG"));
@@ -111,7 +133,6 @@ public class ServerActivity extends BaseActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-//                    .add(R.id.server_fragment_container, mServerFragment)
                     .add(R.id.server_fragment_container, mServerFragment)
                     .commit();
         }

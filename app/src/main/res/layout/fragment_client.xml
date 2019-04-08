@@ -10,8 +10,15 @@
         android:id="@+id/Client_videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+<<<<<<< Updated upstream
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="10dp"></com.whut.getianao.quickdraw.view.CustomVideoView>
+=======
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></com.whut.getianao.quickdraw.view.CustomVideoView>
+>>>>>>> Stashed changes
 
     <TextView
         android:id="@+id/text_client_init"

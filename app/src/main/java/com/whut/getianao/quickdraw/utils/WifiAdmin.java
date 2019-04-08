@@ -30,6 +30,11 @@ public class WifiAdmin {
         mWifiInfo = mWifiManager.getConnectionInfo();
     }
 
+    //wifi开启状态
+    public boolean isWifiEnable(){
+        return mWifiManager.isWifiEnabled();
+    }
+
     // 打开WIFI
     public void openWifi() {
         if (!mWifiManager.isWifiEnabled()) {
@@ -135,11 +140,12 @@ public class WifiAdmin {
     }
 
     // 添加一个网络并连接
-    public void addNetwork(WifiConfiguration wcg) {
+    public boolean addNetwork(WifiConfiguration wcg) {
         int wcgID = mWifiManager.addNetwork(wcg);
         boolean b =  mWifiManager.enableNetwork(wcgID, true);
         System.out.println("a--" + wcgID);
         System.out.println("b--" + b);
+        return b;
     }
 
     // 断开指定ID的网络

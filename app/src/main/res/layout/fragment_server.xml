@@ -10,8 +10,12 @@
         android:id="@+id/Server_videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="96dp"></com.whut.getianao.quickdraw.view.CustomVideoView>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.whut.getianao.quickdraw.view.CustomVideoView>
 
     <!--<Button-->
         <!--android:id="@+id/create_wifi"-->
@@ -21,6 +25,9 @@
         <!--android:text="开始搜索"-->
         <!--tools:layout_editor_absoluteX="470dp"-->
         <!--tools:layout_editor_absoluteY="175dp" />-->
+
+
+
     <info.hoang8f.widget.FButton
         android:id="@+id/create_wifi"
         android:layout_width="wrap_content"

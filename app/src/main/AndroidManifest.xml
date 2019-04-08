@@ -30,20 +30,30 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ClientActivity">
+        <activity
+            android:name=".activity.ClientActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
-        <activity android:name=".activity.ServerActivity">
+        <activity
+            android:name=".activity.ServerActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
-        <activity android:name=".activity.GameActivity">
+        <activity
+            android:name=".activity.GameActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
-        <activity android:name=".base.BaseActivity">
+        <activity
+            android:name=".base.BaseActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
     </application>
 
