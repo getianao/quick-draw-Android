@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -36,6 +37,8 @@ public class GameClientFragment extends Fragment {
     private QMUITipDialog endDialog;
     private QMUITipDialog winDialog;
     private QMUITipDialog loseDialog;
+    private info.hoang8f.widget.FButton btn_again;
+    private info.hoang8f.widget.FButton btn_quit;
 
     //todo：test
     private TextView startBtn;
@@ -71,7 +74,28 @@ public class GameClientFragment extends Fragment {
     }
 
     private void initView() {
+        //btn
         startBtn = view.findViewById(R.id.textView);
+        btn_again=view.findViewById(R.id.btn_again);
+        btn_quit=view.findViewById(R.id.btn_quit);
+        btn_again.setVisibility(View.GONE);
+        btn_quit.setVisibility(View.GONE);
+
+        btn_again.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_again.setVisibility(View.GONE);
+                btn_quit.setVisibility(View.GONE);
+                reset();
+            }
+        });
+
+        btn_quit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+            }
+        });
 
         keepDownDialog = new QMUITipDialog.Builder(getContext())
                 .setTipWord("请保持手机竖直向下")
@@ -128,7 +152,14 @@ public class GameClientFragment extends Fragment {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             if (!myData.isEnd()) {
                 //游戏没有结束
-                //todo:播放gun
+                MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.gun);
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        //mp.start();
+                    }
+                });
+                mp.start();
                 if (!myData.isPutDownByMistake() && myData.isReady() && !myData.isStart()) {
                     //已经稳定，已经准备好，但没有开始
                     startBtn.setText("提前开火");
@@ -241,25 +272,28 @@ public class GameClientFragment extends Fragment {
                     //已稳定，游戏已准备，但没有开始
                     if (!myData.isPutDownByMistake() && myData.isReady() && !myData.isStart()) {
                         //client does nothing
+                        myData.setStart(true);
                         dismissAllDialog();
                         return;
                     }
 
 
-                    //已稳定，游戏已准备，游戏已开始,且5s后游戏没有结束
-                    if (!myData.isPutDownByMistake() && myData.isReady() && myData.isStart() && System.currentTimeMillis() - myData.getStartTime() > 5000) {
-                        startBtn.setText("游戏超时");
-                        //重置状态，强行结束
-                        myData.setPutDownByMistake(true);
-                        myData.setReady(false);
-                        myData.setStart(false);
-                        myData.setEnd(true);
-                    }
+//                    //已稳定，游戏已准备，游戏已开始,且5s后游戏没有结束
+//                    if (!myData.isPutDownByMistake() && myData.isReady() && myData.isStart() && System.currentTimeMillis() - myData.getStartTime() > 5000) {
+//                        startBtn.setText("游戏超时");
+//                        //重置状态，强行结束
+//                        myData.setPutDownByMistake(true);
+//                        myData.setReady(false);
+//                        myData.setStart(false);
+//                        myData.setEnd(true);
+//                    }
                 } else {
                     //游戏结束
                     if (myData.isEnd()) {
                         if (flag3 == 0) {
                             flag3 = 1;
+                            btn_again.setVisibility(View.VISIBLE);
+                            btn_quit.setVisibility(View.VISIBLE);
                             switch (myData.getResult()) {
                                 //由对方结束游戏
                                 case 0:
@@ -344,5 +378,12 @@ public class GameClientFragment extends Fragment {
         long duringTime=myData.getFireTime()-myData.getStartTime();
         str="开枪花费时间："+(duringTime)+"毫秒\n开枪速度："+(1000.0/duringTime)+"m/s";
         startBtn.setText(str);
+    }
+    private void reset(){
+        myData=new GameData();
+        isServerReady = false;
+        flag1 = 0;
+        flag2 = 0;
+        flag3 = 0;
     }
 }

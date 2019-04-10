@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity {
 
     //播放演示视频
     private void playVedioIntro() {
-        videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.client_background));
+        videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.intro));
         videoView.start();
         //播放完恢复主页面
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

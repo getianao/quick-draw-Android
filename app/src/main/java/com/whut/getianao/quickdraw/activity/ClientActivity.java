@@ -84,7 +84,8 @@ public class ClientActivity extends BaseActivity {
                             getSupportFragmentManager()
                                     .beginTransaction()
                                     .addToBackStack(null)  //将当前fragment加入到返回栈中
-                                    .replace(R.id.client_fragment_container, mGameFragment).commit();
+                                    .replace(R.id.client_fragment_container, mGameFragment)
+                                    .commit();
                         }
                     }.start();
                     break;
@@ -142,12 +143,7 @@ public class ClientActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (listenerThread != null) {
-            listenerThread.interrupt();
-        }
-        if (connectThread != null) {
-            connectThread.interrupt();
-        }
+
     }
 
     private void init() {
@@ -216,7 +212,7 @@ public class ClientActivity extends BaseActivity {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(6000);
+                    Thread.sleep(10000);
                     Socket socket = new Socket(getWifiRouteIPAddress(ClientActivity.this), PORT);
                     connectThread = new ConnectThread(ClientActivity.this, socket, handler);
                     connectThread.start();
@@ -245,7 +241,26 @@ public class ClientActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (getSupportFragmentManager().findFragmentById(R.id.client_fragment_container) instanceof GameClientFragment) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 获取当前回退栈中的Fragment个数
+            int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+            // 回退栈中至少有多个fragment,栈底部是首页
+            if (backStackEntryCount > 1) {
+                // 回退一步
+                getSupportFragmentManager().popBackStackImmediate();
+
+            } else {
+                if (listenerThread != null) {
+                    listenerThread.interrupt();
+                }
+                if (connectThread != null) {
+                    connectThread.interrupt();
+                }
+                finish();
+            }
+            return true;
+        } else if (getSupportFragmentManager().findFragmentById(R.id.client_fragment_container) instanceof GameClientFragment) {
             ((GameClientFragment) getSupportFragmentManager().findFragmentById(R.id.client_fragment_container))
                     .onKeyDown(keyCode, event);
             return true;
@@ -388,3 +403,5 @@ public class ClientActivity extends BaseActivity {
         sendToServer("clear");
     }
 }
+
+

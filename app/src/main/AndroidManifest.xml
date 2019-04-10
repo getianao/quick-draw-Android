@@ -48,10 +48,6 @@
             android:configChanges="orientation|screenSize">
         </activity>
         <activity
-            android:name=".activity.GameActivity"
-            android:configChanges="orientation|screenSize">
-        </activity>
-        <activity
             android:name=".base.BaseActivity"
             android:configChanges="orientation|screenSize">
         </activity>

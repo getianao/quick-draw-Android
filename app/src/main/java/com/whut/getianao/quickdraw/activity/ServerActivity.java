@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -155,17 +156,7 @@ public class ServerActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            if (listenerThread != null) {
-                listenerThread.closeServerSocket();
-                listenerThread.interrupt();
-            }
-            if (connectThread != null) {
-                connectThread.stop();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     //获取热点本机ip
@@ -332,7 +323,30 @@ public class ServerActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (getSupportFragmentManager().findFragmentById(R.id.server_fragment_container) instanceof GameServerFragment) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 获取当前回退栈中的Fragment个数
+            int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+            // 回退栈中至少有多个fragment,栈底部是首页
+            if (backStackEntryCount > 1) {
+                // 回退一步
+                getSupportFragmentManager().popBackStackImmediate();
+            } else {
+                try {
+                    if (listenerThread != null) {
+                        listenerThread.closeServerSocket();
+                        listenerThread.interrupt();
+                        listenerThread.stop();
+                    }
+                    if (connectThread != null) {
+                        connectThread.stop();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+            return true;
+        } else if (getSupportFragmentManager().findFragmentById(R.id.server_fragment_container) instanceof GameServerFragment) {
             ((GameServerFragment) getSupportFragmentManager().findFragmentById(R.id.server_fragment_container))
                     .onKeyDown(keyCode, event);
             return true;
