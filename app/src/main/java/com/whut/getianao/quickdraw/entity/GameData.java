@@ -10,7 +10,7 @@ public class GameData {
 
     private long startTime = 0;   // 开始游戏时间
     private long lastPutDownTime;       // 上一次手机放下的时间
-    private long curPutDownTime;           // 当前手机放下的时间
+    private   long curPutDownTime;           // 当前手机放下的时间
 
     private float xPre = 0, yPre = 0, zPre = 0;
 
@@ -20,9 +20,26 @@ public class GameData {
     private long orderFireTime;//语音提示Fire的时间
     private boolean lowFireAngle;
 
-
     private boolean moveWhenReady = false;
 
+    private int result=0;//0：默认，1：正常开枪，2：低角度开枪，3：提前开枪
+    private boolean isWin;//true：赢，false：输
+
+    public int getResult() {
+        return result;
+    }
+
+    public void setResult(int result) {
+        this.result = result;
+    }
+
+    public boolean getWin() {
+        return isWin;
+    }
+
+    public void setWin(boolean win) {
+        isWin = win;
+    }
 
     public boolean isLowFireAngle() {
         return lowFireAngle;

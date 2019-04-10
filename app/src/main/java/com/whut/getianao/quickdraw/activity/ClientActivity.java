@@ -98,8 +98,19 @@ public class ClientActivity extends BaseActivity {
                     //收到服务器发来的开始游戏的指令
                     mClientFragment.getText_state().setText("收到消息:" + msg.getData().getString("MSG"));
                     if (msg.getData().getString("MSG").equals("start")) {
-                        //客户端准备完毕
+                        //得知服务器准备完毕
                         mGameFragment.setServerReady(true);
+                    } else if (msg.getData().getString("MSG").equals("lose")) {
+                        //服务器通知你输了
+                        mGameFragment.getMyData().setEnd(true);
+                        mGameFragment.getMyData().setWin(false);
+                    } else if (msg.getData().getString("MSG").equals("win")) {
+                        //服务器通知你赢了
+                        mGameFragment.getMyData().setEnd(true);
+                        mGameFragment.getMyData().setWin(true);
+                    } else if (msg.getData().getString("MSG").equals("clear")) {
+                        //清除isClientReady
+                        mGameFragment.setServerReady(false);
                     } else {
                         try {
                             int startTime = Integer.parseInt(msg.getData().getString("MSG"));
@@ -349,8 +360,8 @@ public class ClientActivity extends BaseActivity {
         sendToServer("ready");
     }
 
-
-    public void sentClientDataToServer(GameData data){
+    //弃用
+    public void sentClientDataToServer(GameData data) {
         StringBuilder sb = new StringBuilder();
         String res = String.format("{isReady:%s}{isStart:%s}{isEnd:%s}{putDownByMistake:%s}{startTime:%s}{lastPutDownTime:%s}{curPutDownTime:%s}" +
                         "{xPre:%s}{yPre:%s}{zPre:%s}{fireBtnPressed:%s}{orderFireTime:%s}{lowFireAngle:%s}{fireTime:%s}{moveWhenReady:%s}",
@@ -359,5 +370,21 @@ public class ClientActivity extends BaseActivity {
                 String.valueOf(data.getxPre()), String.valueOf(data.getyPre()), String.valueOf(data.getzPre()), String.valueOf(data.isFireBtnPressed()),
                 String.valueOf(data.getOrderFireTime()), String.valueOf(data.isLowFireAngle()), String.valueOf(data.getFireTime()), String.valueOf(data.isMoveWhenReady()));
         sendToServer(res);
+    }
+
+    //告知服务器你输了
+    public void tellServerLose() {
+        sendToServer("lose");
+    }
+
+    //告知服务器你赢了
+    public void tellServerWin() {
+        sendToServer("win");
+    }
+
+
+    //告知服务器清除客户端稳定状态
+    public void tellServerClear() {
+        sendToServer("clear");
     }
 }

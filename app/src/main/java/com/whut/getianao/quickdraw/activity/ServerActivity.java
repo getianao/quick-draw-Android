@@ -105,12 +105,19 @@ public class ServerActivity extends BaseActivity {
                 case GET_MSG://展示收到的信息
                     mServerFragment.getText_state().setText("收到消息:" + msg.getData().getString("MSG"));
                     if (msg.getData().getString("MSG").equals("ready")) {
-                        //客户端准备完毕
+                        //得知客户端准备完毕
                         mGameFragment.setClientReady(true);
-                    } else {
-                        //解析gameData
-                        GameData data=resolveGameData(msg.getData().getString("MSG"));
-                        mGameFragment.setOppsiteData(data);
+                    } else if (msg.getData().getString("MSG").equals("win")) {
+                        //客户端通知你赢了
+                        mGameFragment.getMyData().setEnd(true);
+                        mGameFragment.getMyData().setWin(true);
+                    } else if (msg.getData().getString("MSG").equals("lose")) {
+                        //客户端通知你输了
+                        mGameFragment.getMyData().setEnd(true);
+                        mGameFragment.getMyData().setWin(false);
+                    } else if (msg.getData().getString("MSG").equals("clear")) {
+                        //清除isClientReady
+                        mGameFragment.setClientReady(false);
                     }
                     break;
             }
@@ -350,7 +357,8 @@ public class ServerActivity extends BaseActivity {
         sendToClient(time);
     }
 
-   //将字符串解析为GameData
+    //弃用
+    //将字符串解析为GameData
     private GameData resolveGameData(String data) {
         String[] list = new String[15];
         for (int i = 0; i < 15; i++) {
@@ -380,6 +388,22 @@ public class ServerActivity extends BaseActivity {
 
         return res;
     }
+
+    //告知客户端你输了
+    public void tellClientLose() {
+        sendToClient("lose");
+    }
+
+    //告知客户端你赢了
+    public void tellClientWin() {
+        sendToClient("win");
+    }
+
+    //告知客户端清除服务端稳定状态
+    public void tellClientClear() {
+        sendToClient("clear");
+    }
+
 
 }
 

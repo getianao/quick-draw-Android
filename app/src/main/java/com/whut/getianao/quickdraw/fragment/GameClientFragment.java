@@ -34,17 +34,24 @@ public class GameClientFragment extends Fragment {
     private QMUITipDialog waitForFriendDialog;
     private QMUITipDialog readyDialog;
     private QMUITipDialog endDialog;
+    private QMUITipDialog winDialog;
+    private QMUITipDialog loseDialog;
 
     //todo：test
     private TextView startBtn;
 
     private ClientActivity parentActivity;
     private GameData myData = new GameData();//自己数据
-    private GameData oppsiteData = new GameData();//对方数据
+
     private SensorEventListener mySensorEventListener;
     private boolean isServerReady = false;
     private int flag1 = 0;
     private int flag2 = 0;
+    private int flag3 = 0;
+
+    public GameData getMyData() {
+        return myData;
+    }
 
     public boolean getServerReady() {
         return isServerReady;
@@ -77,6 +84,12 @@ public class GameClientFragment extends Fragment {
                 .create();
         readyDialog = new QMUITipDialog.Builder(getContext())
                 .setTipWord("游戏即将开始，请聆听指令")
+                .create();
+        winDialog = new QMUITipDialog.Builder(getContext())
+                .setTipWord("你赢了")
+                .create();
+        loseDialog = new QMUITipDialog.Builder(getContext())
+                .setTipWord("你输了")
                 .create();
     }
 
@@ -119,18 +132,21 @@ public class GameClientFragment extends Fragment {
                 if (!myData.isPutDownByMistake() && myData.isReady() && !myData.isStart()) {
                     //已经稳定，已经准备好，但没有开始
                     startBtn.setText("提前开火");
+                    myData.setResult(3);
                     myData.setFireBtnPressed(false);
                     myData.setFireTime(System.currentTimeMillis());
                     myData.setEnd(true);
                 } else if (!myData.isPutDownByMistake() && myData.isReady() && myData.isStart() && myData.getyPre() < -4) {
                     //已经稳定，已经准备好，已经开始，但美哟欧陆抬起一定角度
                     startBtn.setText("角度太低");
+                    myData.setResult(2);
                     myData.setFireBtnPressed(false);
                     myData.setFireTime(System.currentTimeMillis());
                     myData.setEnd(true);
                 } else if (!myData.isPutDownByMistake() && myData.isReady() && myData.isStart() && myData.getyPre() > -4) {
                     //已经稳定，已经准备好，已经开始，成功抬起一定角度
                     startBtn.setText("开火成功");
+                    myData.setResult(1);
                     myData.setFireBtnPressed(true);
                     myData.setFireTime(System.currentTimeMillis());
                     myData.setEnd(true);
@@ -165,7 +181,7 @@ public class GameClientFragment extends Fragment {
                 //游戏还没结束
                 if (!myData.isEnd()) {
                     // 手机朝下放置，但还没稳定，游戏未准备，游戏未开始
-                    if (event.values[1] < -9 && myData.isPutDownByMistake() && !myData.isReady() && !myData.isStart()) {
+                    if (event.values[1] < -8 && myData.isPutDownByMistake() && !myData.isReady() && !myData.isStart()) {
                         long diffValue = myData.getCurPutDownTime() - myData.getLastPutDownTime();
                         //astPutDownTime是保持刚放下一瞬间的时刻，currentTimeMillis保持刷新
                         myData.setCurPutDownTime(System.currentTimeMillis());
@@ -184,7 +200,7 @@ public class GameClientFragment extends Fragment {
                     }
 
                     // 当手机朝下放置,且已稳定，且游戏未准备，且游戏未开始
-                    if (event.values[1] < -9 && !myData.isPutDownByMistake() && !myData.isReady() && !myData.isStart()) {
+                    if (event.values[1] < -8 && !myData.isPutDownByMistake() && !myData.isReady() && !myData.isStart()) {
                         try {
                             onlyShowWaitForFriendDialog();
                             //保持CurPutDownTime刷新
@@ -205,7 +221,13 @@ public class GameClientFragment extends Fragment {
                     }
 
                     // 手机拿起时,且游戏还没开始（可能已稳定，可能已准备）
-                    if (event.values[1] > -9 && !myData.isStart()) {
+                    if (event.values[1] > -8 && !myData.isStart()) {
+                        if(myData.isPutDownByMistake()==false){//原本已稳定
+                            //清除服务器中的客户端已稳定状态
+                            parentActivity.tellServerClear();
+                        }
+                        flag1=0;
+                        flag2=0;
                         //保持CurPutDownTime和LastPutDownTime是相同的
                         myData.setCurPutDownTime(System.currentTimeMillis());
                         myData.setLastPutDownTime(myData.getCurPutDownTime());
@@ -213,11 +235,13 @@ public class GameClientFragment extends Fragment {
                         myData.setPutDownByMistake(true);
                         myData.setReady(false);
                         onlyShowKeepDownDialog();
+
                     }
 
                     //已稳定，游戏已准备，但没有开始
                     if (!myData.isPutDownByMistake() && myData.isReady() && !myData.isStart()) {
                         //client does nothing
+                        dismissAllDialog();
                         return;
                     }
 
@@ -233,32 +257,44 @@ public class GameClientFragment extends Fragment {
                     }
                 } else {
                     //游戏结束
-                    if (myData.isEnd() || oppsiteData.isEnd()) {
-                        //其中有一方没有成功开火
-                        if (!myData.isFireBtnPressed() && oppsiteData.isFireBtnPressed()) {
-                            youlose();
-                        }
-                        if (myData.isFireBtnPressed() && !oppsiteData.isFireBtnPressed()) {
-                            youwin();
-                        }
-                        //两方都没有成功开火
-                        if (!myData.isFireBtnPressed() && !oppsiteData.isFireBtnPressed()) {
-
-                            if (myData.getFireTime() - myData.getStartTime() < oppsiteData.getFireTime() - oppsiteData.getStartTime()) {
-                                //我方更早提前开启,对方赢
-                                youlose();
-                            } else {
-                                //对方更早提前开枪,我方赢
-                                youwin();
+                    if (myData.isEnd()) {
+                        if (flag3 == 0) {
+                            flag3 = 1;
+                            switch (myData.getResult()) {
+                                //由对方结束游戏
+                                case 0:
+                                    if (myData.getWin() == true) {
+                                        winDialog.show();
+                                    } else {
+                                        loseDialog.show();
+                                    }
+                                    break;
+                                //由自己结束游戏
+                                case 1:
+                                    //正常开枪，赢
+                                    myData.setWin(true);
+                                    parentActivity.tellServerLose();
+                                    winDialog.show();
+                                    //todo:显示详细数据
+                                    showData();
+                                    break;
+                                case 2:
+                                    //低角度开枪,输
+                                    myData.setWin(false);
+                                    parentActivity.tellServerWin();
+                                    loseDialog.show();
+                                    showData();
+                                    break;
+                                case 3:
+                                    //提前开枪，输
+                                    myData.setWin(false);
+                                    parentActivity.tellServerWin();
+                                    loseDialog.show();
+                                    showData();
+                                    break;
+                                default:
+                                    break;
                             }
-                        }
-                        //两方都成功开火
-                        if (myData.getFireTime() - myData.getStartTime() < oppsiteData.getFireTime() - oppsiteData.getStartTime()) {
-                            //我方更早提前开枪,我方赢
-                            youwin();
-                        } else {
-                            //对方更早提前开枪,对方赢
-                            youlose();
                         }
                     }
                 }
@@ -301,5 +337,12 @@ public class GameClientFragment extends Fragment {
                 .setTipWord("你输了")
                 .create();
         endDialog.show();
+    }
+
+    private void showData(){
+        String str;
+        long duringTime=myData.getFireTime()-myData.getStartTime();
+        str="开枪花费时间："+(duringTime)+"毫秒\n开枪速度："+(1000.0/duringTime)+"m/s";
+        startBtn.setText(str);
     }
 }
