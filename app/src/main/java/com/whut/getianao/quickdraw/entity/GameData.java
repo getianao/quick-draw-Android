@@ -5,20 +5,21 @@ public class GameData {
 
     private boolean isReady = false;  // 是否在准备过程中
     private boolean isStart = false;//是否以及开始游戏
-    private boolean isEnd; //本局游戏是否已经结束
+    private boolean isEnd = false; //本局游戏是否已经结束
     private boolean putDownByMistake = true;      // 不小心放下了手机
 
     private long startTime = 0;   // 开始游戏时间
-
     private long lastPutDownTime;       // 上一次手机放下的时间
     private long curPutDownTime;           // 当前手机放下的时间
 
-    private float xPre = 0, yPre = 0, zPre = 0;   // 手机移动前的重量加速度
+    private float xPre = 0, yPre = 0, zPre = 0;
 
     private boolean fireBtnPressed; // 是否成功开枪
+    private long fireTime;//开火时间
+
     private long orderFireTime;//语音提示Fire的时间
     private boolean lowFireAngle;
-    private long fireTime;//开火时间
+
 
     private boolean moveWhenReady = false;
 

@@ -10,20 +10,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
-import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.whut.getianao.quickdraw.R;
 import com.whut.getianao.quickdraw.base.BaseActivity;
-import com.whut.getianao.quickdraw.fragment.GameFragment;
+import com.whut.getianao.quickdraw.entity.GameData;
+import com.whut.getianao.quickdraw.fragment.GameClientFragment;
+import com.whut.getianao.quickdraw.fragment.GameServerFragment;
 import com.whut.getianao.quickdraw.fragment.ServerFragment;
 import com.whut.getianao.quickdraw.thread.ConnectThread;
 import com.whut.getianao.quickdraw.thread.ListenerThread;
@@ -48,7 +44,7 @@ public class ServerActivity extends BaseActivity {
     private static final int PORT = 1234; //端口号
 
     private ServerFragment mServerFragment;
-    private GameFragment mGameFragment;
+    private GameServerFragment mGameFragment;
     private WifiManager wifiManager;
     private Boolean isReady;
     private ConnectThread connectThread; // 连接线程
@@ -108,6 +104,14 @@ public class ServerActivity extends BaseActivity {
                     break;
                 case GET_MSG://展示收到的信息
                     mServerFragment.getText_state().setText("收到消息:" + msg.getData().getString("MSG"));
+                    if (msg.getData().getString("MSG").equals("ready")) {
+                        //客户端准备完毕
+                        mGameFragment.setClientReady(true);
+                    } else {
+                        //解析gameData
+                        GameData data=resolveGameData(msg.getData().getString("MSG"));
+                        mGameFragment.setOppsiteData(data);
+                    }
                     break;
             }
         }
@@ -130,7 +134,7 @@ public class ServerActivity extends BaseActivity {
 
     private void init() {
         mServerFragment = new ServerFragment();
-        mGameFragment = new GameFragment();
+        mGameFragment = new GameServerFragment();
 
         isReady = false;
 
@@ -321,17 +325,61 @@ public class ServerActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (getSupportFragmentManager().findFragmentById(R.id.client_fragment_container) instanceof GameFragment) {
-            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.client_fragment_container))
-                    .onKeyDown(keyCode, event);
-            return true;
-        }
-        if (getSupportFragmentManager().findFragmentById(R.id.server_fragment_container) instanceof GameFragment) {
-            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.server_fragment_container))
+        if (getSupportFragmentManager().findFragmentById(R.id.server_fragment_container) instanceof GameServerFragment) {
+            ((GameServerFragment) getSupportFragmentManager().findFragmentById(R.id.server_fragment_container))
                     .onKeyDown(keyCode, event);
             return true;
         }
         return false;
     }
+
+    //向客户端发送数据
+    public void sendToClient(String msg) {
+        if (connectThread != null) {
+            connectThread.sendData(msg);
+        } else {
+            Log.w("AAA", "connectThread == null");
+        }
+    }
+
+    public void tellClientToStart() {
+        sendToClient("start");
+    }
+
+    public void tellClientStartTime(String time) {
+        sendToClient(time);
+    }
+
+   //将字符串解析为GameData
+    private GameData resolveGameData(String data) {
+        String[] list = new String[15];
+        for (int i = 0; i < 15; i++) {
+            int start = data.indexOf('{');
+            int end = data.indexOf('}');
+            String tmp = data.substring(start, end + 1);
+            list[i] = tmp.substring(tmp.indexOf(':') + 1, tmp.indexOf('}'));
+            data = data.substring(end + 1);
+        }
+        GameData res = new GameData();
+
+        res.setReady(Boolean.valueOf(list[0]));
+        res.setStart(Boolean.valueOf(list[1]));
+        res.setEnd(Boolean.valueOf(list[2]));
+        res.setPutDownByMistake(Boolean.valueOf(list[3]));
+        res.setStartTime(Long.valueOf(list[4]));
+        res.setLastPutDownTime(Long.valueOf(list[5]));
+        res.setCurPutDownTime(Long.valueOf(list[6]));
+        res.setxPre(Float.valueOf(list[7]));
+        res.setyPre(Float.valueOf(list[8]));
+        res.setzPre(Float.valueOf(list[9]));
+        res.setFireBtnPressed(Boolean.valueOf(list[10]));
+        res.setOrderFireTime(Long.valueOf(list[11]));
+        res.setLowFireAngle(Boolean.valueOf(list[12]));
+        res.setFireTime(Long.valueOf(list[13]));
+        res.setMoveWhenReady(Boolean.valueOf(list[14]));
+
+        return res;
+    }
+
 }
 

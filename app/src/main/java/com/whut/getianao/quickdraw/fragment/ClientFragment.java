@@ -123,10 +123,6 @@ public class ClientFragment extends Fragment {
                 .create();
     }
 
-
-
-
-
     private void bindBtnOnClickListener() {
         //连接至服务端热点
         btn_connectToServer.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +143,7 @@ public class ClientFragment extends Fragment {
         btn_sendToServer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.sendToServer();
+                parentActivity.sendToServer("test");
             }
         });
     }

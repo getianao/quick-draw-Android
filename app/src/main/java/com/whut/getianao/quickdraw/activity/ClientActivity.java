@@ -12,22 +12,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.whut.getianao.quickdraw.R;
 import com.whut.getianao.quickdraw.base.BaseActivity;
+import com.whut.getianao.quickdraw.entity.GameData;
 import com.whut.getianao.quickdraw.fragment.ClientFragment;
-import com.whut.getianao.quickdraw.fragment.GameFragment;
-import com.whut.getianao.quickdraw.fragment.ServerFragment;
+import com.whut.getianao.quickdraw.fragment.GameClientFragment;
+import com.whut.getianao.quickdraw.fragment.GameServerFragment;
 import com.whut.getianao.quickdraw.thread.ConnectThread;
 import com.whut.getianao.quickdraw.thread.ListenerThread;
 import com.whut.getianao.quickdraw.utils.WifiAdmin;
@@ -49,7 +45,7 @@ public class ClientActivity extends BaseActivity {
     private static final int PORT = 1234; //端口号
 
     private ClientFragment mClientFragment;
-    private GameFragment mGameFragment;
+    private GameClientFragment mGameFragment;
     private ConnectThread connectThread;// 连接线程
     private ListenerThread listenerThread;//监听线程
     private WifiManager wifiManager;
@@ -101,6 +97,17 @@ public class ClientActivity extends BaseActivity {
                 case GET_MSG:
                     //收到服务器发来的开始游戏的指令
                     mClientFragment.getText_state().setText("收到消息:" + msg.getData().getString("MSG"));
+                    if (msg.getData().getString("MSG").equals("start")) {
+                        //客户端准备完毕
+                        mGameFragment.setServerReady(true);
+                    } else {
+                        try {
+                            int startTime = Integer.parseInt(msg.getData().getString("MSG"));
+                            mGameFragment.setStartTime(startTime);
+                        } catch (NumberFormatException e) {
+                            Log.e("aaaa", "你输入的不是整数。。。。。。。可能是浮点数");
+                        }
+                    }
                     break;
             }
         }
@@ -134,7 +141,7 @@ public class ClientActivity extends BaseActivity {
 
     private void init() {
         mClientFragment = new ClientFragment();
-        mGameFragment = new GameFragment();
+        mGameFragment = new GameClientFragment();
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }
 
@@ -217,9 +224,9 @@ public class ClientActivity extends BaseActivity {
     }
 
     //向服务器发送数据
-    public void sendToServer() {
+    public void sendToServer(String msg) {
         if (connectThread != null) {
-            connectThread.sendData("这是来自Wifi客户端的消息");
+            connectThread.sendData(msg);
         } else {
             Log.w("AAA", "connectThread == null");
         }
@@ -227,13 +234,8 @@ public class ClientActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (getSupportFragmentManager().findFragmentById(R.id.client_fragment_container) instanceof GameFragment) {
-            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.client_fragment_container))
-                    .onKeyDown(keyCode, event);
-            return true;
-        }
-        if (getSupportFragmentManager().findFragmentById(R.id.server_fragment_container) instanceof GameFragment) {
-            ((GameFragment) getSupportFragmentManager().findFragmentById(R.id.server_fragment_container))
+        if (getSupportFragmentManager().findFragmentById(R.id.client_fragment_container) instanceof GameClientFragment) {
+            ((GameClientFragment) getSupportFragmentManager().findFragmentById(R.id.client_fragment_container))
                     .onKeyDown(keyCode, event);
             return true;
         }
@@ -341,5 +343,21 @@ public class ClientActivity extends BaseActivity {
             e.printStackTrace();
             mClientFragment.getText_state().setText("创建热点失败");
         }
+    }
+
+    public void tellServerIMReady() {
+        sendToServer("ready");
+    }
+
+
+    public void sentClientDataToServer(GameData data){
+        StringBuilder sb = new StringBuilder();
+        String res = String.format("{isReady:%s}{isStart:%s}{isEnd:%s}{putDownByMistake:%s}{startTime:%s}{lastPutDownTime:%s}{curPutDownTime:%s}" +
+                        "{xPre:%s}{yPre:%s}{zPre:%s}{fireBtnPressed:%s}{orderFireTime:%s}{lowFireAngle:%s}{fireTime:%s}{moveWhenReady:%s}",
+                String.valueOf(data.isReady()), String.valueOf(data.isStart()), String.valueOf(data.isEnd()), String.valueOf(data.isPutDownByMistake()),
+                String.valueOf(data.getStartTime()), String.valueOf(data.getLastPutDownTime()), String.valueOf(data.getCurPutDownTime()),
+                String.valueOf(data.getxPre()), String.valueOf(data.getyPre()), String.valueOf(data.getzPre()), String.valueOf(data.isFireBtnPressed()),
+                String.valueOf(data.getOrderFireTime()), String.valueOf(data.isLowFireAngle()), String.valueOf(data.getFireTime()), String.valueOf(data.isMoveWhenReady()));
+        sendToServer(res);
     }
 }
